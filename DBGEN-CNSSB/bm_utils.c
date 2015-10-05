@@ -38,7 +38,7 @@
 #include <ctype.h>
 #include <math.h>
 #ifndef _POSIX_SOURCE
-#include <malloc.h>
+#include <malloc/malloc.h>
 #endif /* POSIX_SOURCE */
 
 #include <fcntl.h>
@@ -57,7 +57,7 @@
 #define S_ISREG(m) ( ((m) & _S_IFMT) == _S_IFREG )
 #define S_ISFIFO(m) ( ((m) & _S_IFMT) == _S_IFIFO )
 
-#endif 
+#endif
 #endif
 #ifndef stat
 #define stat _stat
@@ -120,15 +120,15 @@ yes_no(char *prompt)
     char      reply[128];
 
 #ifdef WIN32
-/* Disable warning about conditional expression is constant */ 
+/* Disable warning about conditional expression is constant */
 #pragma warning(disable:4127)
-#endif 
+#endif
 
     while (1)
         {
 #ifdef WIN32
 #pragma warning(default:4127)
-#endif 
+#endif
         printf("%s [Y/N]: ", prompt);
         gets(reply);
         switch (*reply)
@@ -237,15 +237,15 @@ julian(long date)
     result = STARTDATE;
 
 #ifdef WIN32
-/* Disable warning about conditional expression is constant */ 
+/* Disable warning about conditional expression is constant */
 #pragma warning(disable:4127)
-#endif 
+#endif
 
     while (1)
         {
-#ifdef WIN32 
+#ifdef WIN32
 #pragma warning(default:4127)
-#endif 
+#endif
         yr = result / 1000;
         yend = yr * 1000 + 365 + LEAP(yr);
         if (result + offset > yend)   /* overflow into next year */
@@ -277,7 +277,7 @@ long      weight,
 
     if (d_path == NULL)
 		{
-		sprintf(line, "%s%c%s", 
+		sprintf(line, "%s%c%s",
 			env_config(CONFIG_TAG, CONFIG_DFLT), PATH_SEP, path);
 		fp = fopen(line, "r");
 		OPEN_CHECK(fp, line);
@@ -394,8 +394,12 @@ tbl_open(int tbl, char *mode)
       /*use open to first to get the in fd and apply regular fdopen*/
 
 	/*cheng: Betty mentioned about write mode problem here, added 066*/
-      retcode =
-		  open(fullpath, ((*mode == 'r')?O_RDONLY:O_WRONLY)|O_CREAT|O_LARGEFILE,0644);
+#ifdef __APPLE__
+          retcode =
+              open(fullpath, ((*mode == 'r')?O_RDONLY:O_WRONLY)|O_CREAT,0644);
+#else
+      retcode = open(fullpath, ((*mode == 'r')?O_RDONLY:O_WRONLY)|O_CREAT|O_LARGEFILE,0644);
+#endif
         f = fdopen(retcode, mode);
 #else
         f = fopen(fullpath, mode);
@@ -420,7 +424,7 @@ agg_str(distribution *set, long count, long col, char *dest)
 	distribution *d;
 	int i;
 
-	
+
 	d = set;
 	*dest = '\0';
 	for (i=0; i < count; i++)
@@ -551,7 +555,7 @@ set_state(int table, long sf, long procs, long step, long *extra_rows)
 {
     int i;
 	long rowcount, remainder, result;
-	
+
     if (sf == 0 || step == 0)
         return(0);
 
@@ -570,7 +574,7 @@ set_state(int table, long sf, long procs, long step, long *extra_rows)
 			tdefs[table].gen_seed(0, rowcount);
 		/* need to set seeds of child in case there's a dependency */
 		/* NOTE: this assumes that the parent and child have the same base row count */
-			if (tdefs[table].child != NONE) 
+			if (tdefs[table].child != NONE)
 			tdefs[tdefs[table].child].gen_seed(0,rowcount);
 		}
 	*extra_rows = remainder % procs;
@@ -579,11 +583,3 @@ set_state(int table, long sf, long procs, long step, long *extra_rows)
 
 	return(result);
 }
-
-
-
-
-
-
-
-
