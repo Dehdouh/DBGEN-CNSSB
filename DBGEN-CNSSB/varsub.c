@@ -2,7 +2,7 @@
 #include "config.h"
 #include <stdio.h>
 #ifndef _POSIX_SOURCE
-#include <malloc.h>
+#include <malloc/malloc.h>
 #endif /* POSIX_SOURCE */
 #if (defined(_POSIX_)||!defined(WIN32))
 #ifndef DOS
@@ -87,7 +87,7 @@ varsub(int qnum, int vnum, int flags)
         tmp_date;
 	long tmp1,
 		tmp2;
-	
+
     if (vnum == 0)
     {
 		if ((flags & DFLT) == 0)
@@ -99,7 +99,7 @@ varsub(int qnum, int vnum, int flags)
 				param[2][0] = '\0';
 				break;
 			case 2:
-				sprintf(param[1], "%d", 
+				sprintf(param[1], "%d",
 					UnifInt((long)P_SIZE_MIN, (long)P_SIZE_MAX, qnum));
 				pick_str(&p_types_set, qnum, param[3]);
 				ptr = param[3] + strlen(param[3]);
@@ -112,7 +112,7 @@ varsub(int qnum, int vnum, int flags)
 				pick_str(&c_mseg_set, qnum, param[1]);
 				/*
 				* pick a random offset within the month of march and add the
-				* appropriate magic numbers to position the output functions 
+				* appropriate magic numbers to position the output functions
 				* at the start of March '95
 				*/
 				tmp_date = UnifInt((long)0, (long)30, (long)qnum);
@@ -121,7 +121,7 @@ varsub(int qnum, int vnum, int flags)
 				break;
 			case 4:
 				tmp_date = UnifInt(1,58,qnum);
-				sprintf(param[1],"19%02d-%02d-01", 
+				sprintf(param[1],"19%02d-%02d-01",
 					93 + tmp_date/12, tmp_date%12 + 1);
 				param[2][0] = '\0';
 				break;
@@ -156,7 +156,7 @@ varsub(int qnum, int vnum, int flags)
 				break;
 			case 10:
 				tmp_date = UnifInt(1,24,qnum);
-				sprintf(param[1],"19%02d-%02d-01", 
+				sprintf(param[1],"19%02d-%02d-01",
 					93 + tmp_date/12, tmp_date%12 + 1);
 				param[2][0] = '\0';
 				break;
@@ -179,18 +179,18 @@ varsub(int qnum, int vnum, int flags)
 				break;
 			case 14:
 				tmp_date = UnifInt(1,60,qnum);
-				sprintf(param[1],"19%02d-%02d-01", 
+				sprintf(param[1],"19%02d-%02d-01",
 					93 + tmp_date/12, tmp_date%12 + 1);
 				param[2][0] = '\0';
 				break;
 			case 15:
 				tmp_date = UnifInt(1,58,qnum);
-				sprintf(param[1],"19%02d-%02d-01", 
+				sprintf(param[1],"19%02d-%02d-01",
 					93 + tmp_date/12, tmp_date%12 + 1);
 				param[2][0] = '\0';
 				break;
 			case 16:
-				tmp1 = UnifInt(1, 5, qnum); 
+				tmp1 = UnifInt(1, 5, qnum);
 				tmp2 = UnifInt(1, 5, qnum);
 				sprintf(param[1], "Brand#%d%d", tmp1, tmp2);
 				pick_str(&p_types_set, qnum, param[2]);
@@ -205,7 +205,7 @@ varsub(int qnum, int vnum, int flags)
 				}
 					break;
 			case 17:
-				tmp1 = UnifInt(1, 5, qnum); 
+				tmp1 = UnifInt(1, 5, qnum);
 				tmp2 = UnifInt(1, 5, qnum);
 				sprintf(param[1], "Brand#%d%d", tmp1, tmp2);
 				pick_str(&p_cntr_set, qnum, param[2]);
@@ -216,13 +216,13 @@ varsub(int qnum, int vnum, int flags)
 				param[2][0] = '\0';
 				break;
 			case 19:
-				tmp1 = UnifInt(1, 5, qnum); 
+				tmp1 = UnifInt(1, 5, qnum);
 				tmp2 = UnifInt(1, 5, qnum);
 				sprintf(param[1], "Brand#%d%d", tmp1, tmp2);
-				tmp1 = UnifInt(1, 5, qnum); 
+				tmp1 = UnifInt(1, 5, qnum);
 				tmp2 = UnifInt(1, 5, qnum);
 				sprintf(param[2], "Brand#%d%d", tmp1, tmp2);
-				tmp1 = UnifInt(1, 5, qnum); 
+				tmp1 = UnifInt(1, 5, qnum);
 				tmp2 = UnifInt(1, 5, qnum);
 				sprintf(param[3], "Brand#%d%d", tmp1, tmp2);
 				sprintf(param[4], "%ld", UnifInt(1, 10, qnum));
@@ -254,13 +254,13 @@ varsub(int qnum, int vnum, int flags)
 			case 24:
                 break;
 			default:
-				fprintf(stderr, 
-					"No variable definitions available for query %d\n", 
+				fprintf(stderr,
+					"No variable definitions available for query %d\n",
                     qnum);
 				return;
         }
     }
-	
+
     if (flags & LOG)
 	{
         if (lfp == NULL)
@@ -289,7 +289,7 @@ varsub(int qnum, int vnum, int flags)
     }
     else
 	{
-        if (flags & DFLT)   
+        if (flags & DFLT)
 		{
             /* to allow -d to work at all scale factors */
             if (qnum == 11 && vnum == 2)
@@ -298,11 +298,11 @@ varsub(int qnum, int vnum, int flags)
                 if (defaults[qnum - 1][vnum - 1])
                     fprintf(ofp, "%s", defaults[qnum - 1][vnum - 1]);
                 else
-					fprintf(stderr, 
+					fprintf(stderr,
 					"Bad default request (q: %d, p: %d)\n",
 					qnum, vnum);
 		}
-        else        
+        else
 		{
             if (param[vnum] && vnum <= MAX_PARAM)
                 fprintf(ofp, "%s", param[vnum]);
